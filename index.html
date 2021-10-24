@@ -5,23 +5,32 @@
         <script src="resources/scripts/graphics.js" defer></script>
     </head>
     <body>
-        <h1>Sorting Algorithm Visualizer</h1>
-        <p>Use this html canvas app to visualize sorting algorithims</p>
-
-        <label for="algo">Choose an algorithim:</label>
-        <select name="algo" id="algo">
-            <option value="bubble">Bubble Sort</option>
-            <option value="bucket">Bucket Sort</option>
-            <option value="counting">Counting Sort</option>
-            <option value="heap">Heap Sort</option>
-            <option value="insertion">Insertion Sort</option>
-            <option value="merge">Merge Sort</option>
-            <option value="quick">Quick Sort</option>
-            <option value="radix">Radix Sort</option>
-            <option value="selection">Selection Sort</option> 
-        </select>
-        <button id="sortBtn" onClick="doSort()">Start Sort</button>
-        <button id="resetBtn" onClick="resetSort()">Reset</button>
+        <div id="wrapper">
+            <div id="intro">
+                <h1>Sorting Algorithm Visualizer</h1>
+                <p>Use this app to visualize sorting algorithims</p>
+            </div>
+            <div id="topBar">
+                <label for="algo">Choose an algorithim:</label>
+                <select name="algo" id="algo">
+                    <option value="bubble">Bubble Sort</option>
+                    <option value="bucket">Bucket Sort</option>
+                    <option value="counting">Counting Sort</option>
+                    <option value="heap">Heap Sort</option>
+                    <option value="insertion">Insertion Sort</option>
+                    <option value="merge">Merge Sort</option>
+                    <option value="quick">Quick Sort</option>
+                    <option value="radix">Radix Sort</option>
+                    <option value="selection">Selection Sort</option> 
+                </select>
+                <button id="sortBtn" onClick="doSort()">Start Sort</button>
+                <button id="resetBtn" onClick="resetSort()">Reset</button>
+            </div>
+            <div id="content">
+                <div id="visualizer">
+                </div>
+            </div>
+        </div>
     </body>
     
 </html>
