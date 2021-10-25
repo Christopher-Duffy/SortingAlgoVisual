@@ -1,10 +1,23 @@
+class arrElement{
+    constructor(value){
+        this.num = value;
+        this.cursor = false;
+        this.inPlace = false;
+    }
+} 
+
 var valuesToSort=[];
 
 function doSort(){
     alert("I am now doing the sort");
 }
 function resetValues(){
-    valuesToSort=makeRandomArray(100);
+    valuesToSort=[];
+    var size=100;
+    var max=100;
+    for(var i=0;i<size;i++){
+        valuesToSort.push(new arrElement(Math.floor(Math.random()*max)+1));
+    }
 }
 
 function renderValues(){
@@ -22,17 +35,9 @@ function deleteElementDivs(){
    }
 }
 
-function makeRandomArray(size){
-    var arr=[];
-    for (var i=0; i<size; i++){
-        arr.push(Math.floor(Math.random()*100));
-    }
-    return arr;
-}
-
 function makeDivsFromArray(arr,width,height){
     arr.forEach(element => {
-        document.getElementById("visualizer").append(makeElement(width,height*element/100));
+        document.getElementById("visualizer").append(makeElement(width,height*element.num/100));
     });
 }
 
@@ -43,3 +48,30 @@ function makeElement(width,height){
     div.classList.add("element");
     return div;
 }
+function step(){
+    //do thing to loop
+    valuesToSort=shuffle(valuesToSort);
+    //wait
+    renderValues();
+    setTimeout(step, 100);
+}
+
+function shuffle(arr){
+    var currentIndex = arr.length-1, randomIndex;
+    while (currentIndex >=0){
+        randomIndex= Math.floor(Math.random()*arr.length);
+        arr = swap(arr,currentIndex,randomIndex)
+        currentIndex--;
+    }
+    return arr;
+}
+
+function swap(arr,i1,i2){
+    var temp = arr[i1]
+    arr[i1]=arr[i2];
+    arr[i2]=temp;
+    return arr;
+}
+//make a graphics loop
+//have cursors on values
+//have value change
