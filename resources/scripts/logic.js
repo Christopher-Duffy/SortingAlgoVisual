@@ -1,3 +1,74 @@
+//these could be a variable
+var SIZE=100;
+var MAX = 100;
+
+class sortGraphDiv{
+    constructor(wrapperDivId){
+        this.valuesToSort=[];
+        this.wrapperDiv=document.getElementById(wrapperDivId);
+        this.elementWidth = this.wrapperDiv.clientWidth/SIZE;
+        this.elementHeight = this.wrapperDiv.clientHeight;
+    }
+    
+    init(){
+        this.resetRandomValues();
+        this.renderValues();
+    }
+
+    resetRandomValues(){
+        this.valuesToSort=[];
+        for(var i=0;i<SIZE;i++){
+            this.valuesToSort.push(new arrElement(Math.floor(Math.random()*MAX)+1));
+        }
+    }
+
+    renderValues(){
+        this.deleteElementDivs();
+        this.makeDivsFromArray(this.valuesToSort, this.elementWidth, this.elementHeight);
+    }
+
+    deleteElementDivs(){
+        var divs= document.getElementsByClassName("arrayElementVisual");
+        while(divs[0]){
+            divs[0].parentNode.removeChild(divs[0]);
+        }
+     }
+     
+    makeDivsFromArray(arr,width,height){
+        arr.forEach(element => {
+            this.wrapperDiv.append(this.makeElement(width,height*element.num/100));
+
+        });
+    }
+     
+    makeElement(width,height){
+        var div = document.createElement("div");
+        div.style.width=width+"px";
+        div.style.height=height+"px";
+        div.style.backgroundColor="steelblue";
+        div.style.float="right";
+        div.classList.add("arrayElementVisual");
+        return div;
+    }
+
+    swap(i1,i2){
+        var temp = this.valuesToSort[i1];
+        this.valuesToSort[i1]=this.valuesToSort[i2];
+        this.valuesToSort[i2]=temp;
+    }
+
+    shuffle(){
+        var currentIndex = this.valuesToSort.length-1;
+        var randomIndex = 0;
+        while (currentIndex >=0){
+            randomIndex = Math.floor(Math.random()*this.valuesToSort.length);
+            this.swap(currentIndex,randomIndex)
+            currentIndex--;
+        }
+    }
+
+}
+
 class arrElement{
     constructor(value){
         this.num = value;
@@ -6,48 +77,18 @@ class arrElement{
     }
 } 
 
-var valuesToSort=[];
-
-function doSort(){
-    alert("I am now doing the sort");
-}
-function resetValues(){
-    valuesToSort=[];
-    var size=100;
-    var max=100;
-    for(var i=0;i<size;i++){
-        valuesToSort.push(new arrElement(Math.floor(Math.random()*max)+1));
+class sortingAlgo{
+    constructor(){
+        this.numSteps;
+        this.currentStep;
+        this.steps=[];
     }
 }
 
-function renderValues(){
-    var visualizer = document.getElementById("visualizer");
-    var width= visualizer.clientWidth / valuesToSort.length;
-    var height = visualizer.clientHeight;
-    deleteElementDivs();
-    makeDivsFromArray(valuesToSort, width, height);
-}
 
-function deleteElementDivs(){
-   var divs= document.getElementsByClassName("element");
-   while(divs[0]){
-       divs[0].parentNode.removeChild(divs[0]);
-   }
-}
 
-function makeDivsFromArray(arr,width,height){
-    arr.forEach(element => {
-        document.getElementById("visualizer").append(makeElement(width,height*element.num/100));
-    });
-}
 
-function makeElement(width,height){
-    var div = document.createElement("div");
-    div.style.width=width+"px";
-    div.style.height=height+"px";
-    div.classList.add("element");
-    return div;
-}
+
 function step(){
     //do thing to loop
     valuesToSort=shuffle(valuesToSort);
@@ -56,22 +97,6 @@ function step(){
     setTimeout(step, 100);
 }
 
-function shuffle(arr){
-    var currentIndex = arr.length-1, randomIndex;
-    while (currentIndex >=0){
-        randomIndex= Math.floor(Math.random()*arr.length);
-        arr = swap(arr,currentIndex,randomIndex)
-        currentIndex--;
-    }
-    return arr;
-}
-
-function swap(arr,i1,i2){
-    var temp = arr[i1]
-    arr[i1]=arr[i2];
-    arr[i2]=temp;
-    return arr;
-}
 //make a graphics loop
 //have cursors on values
 //have value change
