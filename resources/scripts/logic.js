@@ -7,12 +7,40 @@ class sortGraphDiv{
         this.valuesToSort=[];
         this.wrapperDiv=document.getElementById(wrapperDivId);
         this.elementWidth = this.wrapperDiv.clientWidth/SIZE;
-        this.elementHeight = this.wrapperDiv.clientHeight;
+        this.wrapperHeight = this.wrapperDiv.clientHeight;
+        this.bubbleVars={i:0,unsorted:0};
+        this.selectionVars={cursor:0,sorted:0,biggestI:0};
+        this.tick=function(){};
+        this.sorted=false;
     }
     
     init(){
         this.resetRandomValues();
         this.renderValues();
+        this.sorted=false;
+        this.resetBubbleVars();
+        this.resetSelectionVars();
+    }
+
+    resetBubbleVars(){
+        this.bubbleVars.i=0;
+        this.bubbleVars.unsorted=SIZE;
+    }
+
+    resetSelectionVars(){
+        this.selectionVars.cursor=0;
+        this.selectionVars.sorted=0;
+        this.selectionVars.biggestI=0;
+    }
+
+    doSort(sortName){
+        switch (sortName){
+            case "bubble":
+                this.tick=this.bubbleSort;
+            case "selection":
+                this.tick=this.selectionSort;
+        }
+        this.loop();
     }
 
     resetRandomValues(){
@@ -24,7 +52,7 @@ class sortGraphDiv{
 
     renderValues(){
         this.deleteElementDivs();
-        this.makeDivsFromArray(this.valuesToSort, this.elementWidth, this.elementHeight);
+        this.makeDivsFromArray();
     }
 
     deleteElementDivs(){
@@ -33,11 +61,22 @@ class sortGraphDiv{
             divs[0].parentNode.removeChild(divs[0]);
         }
      }
-     
-    makeDivsFromArray(arr,width,height){
-        arr.forEach(element => {
-            this.wrapperDiv.append(this.makeElement(width,height*element.num/100));
-
+    //this needs to be retooled to use class variables instead of parameters 
+    makeDivsFromArray(){
+        this.valuesToSort.forEach(element => {
+            var div = document.createElement("div");
+            div.style.width=this.elementWidth+"px";
+            div.style.height=this.wrapperHeight*element.num/100+"px";
+            div.style.float="right";
+            if (element.sorted){
+                div.style.backgroundColor="green";
+            }else if(element.cursor){
+                div.style.backgroundColor="yellow";
+            }else{
+                div.style.backgroundColor="blue";
+            }
+            div.classList.add("arrayElementVisual");
+            this.wrapperDiv.append(div);
         });
     }
      
@@ -45,8 +84,9 @@ class sortGraphDiv{
         var div = document.createElement("div");
         div.style.width=width+"px";
         div.style.height=height+"px";
-        div.style.backgroundColor="steelblue";
         div.style.float="right";
+        
+
         div.classList.add("arrayElementVisual");
         return div;
     }
@@ -67,36 +107,104 @@ class sortGraphDiv{
         }
     }
 
+    loop(){
+        this.tick();
+        this.renderValues();
+        if(!this.sorted){
+            setTimeout( () =>{this.loop();},5);
+        }
+        console.log('looping');
+    }
+
+    bubbleSort(){
+        var i = this.bubbleVars.i;
+        var unsorted = this.bubbleVars.unsorted;
+        if (unsorted>0){
+            if(i>unsorted-2){
+                this.valuesToSort[i].sorted=true;
+                if(i>0){
+                    this.valuesToSort[i-1].cursor=false;
+                }
+                i = 0;
+                unsorted--;
+            }else{
+                if (i>0){
+                    this.valuesToSort[i-1].cursor=false;
+                }
+                this.valuesToSort[i].cursor=true;
+                this.valuesToSort[i+1].cursor=true;
+                if(this.valuesToSort[i].num>this.valuesToSort[i+1].num){
+                    this.swap(i,i+1);
+                }
+                i++;
+            }
+        }else{
+            this.sorted=true;
+        }
+        this.bubbleVars.i=i;
+        this.bubbleVars.unsorted=unsorted;
+    }
+    selectionSort(){
+        var i = this.selectionVars.cursor;
+        var sorted = this.selectionVars.sorted;
+        var biggestI = this.selectionVars.biggestI;
+
+        if(sorted<SIZE){
+            if(i<SIZE-sorted){
+                this.valuesToSort[i].cursor=true;
+                if(this.valuesToSort[i].num>this.valuesToSort[biggestI].num){
+                    this.valuesToSort[biggestI].cursor=false;
+                    biggestI = i;
+                    this.valuesToSort[biggestI].cursor=true;
+                }
+                if (i>0 && biggestI!=(i-1)){
+                    this.valuesToSort[i-1].cursor=false;
+                }
+                i++;
+            }else{
+                var biggest = this.valuesToSort.splice(biggestI,1)[0];
+                biggest.sorted=true;
+                this.valuesToSort.push(biggest);
+                this.valuesToSort[i-1].cursor=false;
+                i=0;
+                biggestI=0;
+                sorted++;
+            }
+        }else{
+           this.sorted = true; 
+        }
+
+        this.selectionVars.cursor = i;
+        this.selectionVars.sorted = sorted;
+        this.selectionVars.biggestI=biggestI;
+    }
 }
 
 class arrElement{
     constructor(value){
         this.num = value;
+        this.sorted = false;
         this.cursor = false;
-        this.inPlace = false;
     }
 } 
 
-class sortingAlgo{
-    constructor(){
-        this.numSteps;
-        this.currentStep;
-        this.steps=[];
-    }
+var chart = new sortGraphDiv("visualizer");
+chart.init();
+
+function doSort(){
+    var sortName = document.getElementById("algo").value;
+    chart.doSort(sortName);
 }
 
-
-
-
-
-function step(){
-    //do thing to loop
-    valuesToSort=shuffle(valuesToSort);
-    //wait
-    renderValues();
-    setTimeout(step, 100);
+function resetSort(){
+    chart.init();
 }
-
-//make a graphics loop
-//have cursors on values
-//have value change
+// Selection Sort
+// Bubble Sort
+// Insertion Sort
+// Merge Sort
+// Quick Sort
+// Heap Sort
+// Counting Sort
+// Radix Sort
+// Bucket Sort
