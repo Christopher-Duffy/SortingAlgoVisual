@@ -151,7 +151,7 @@ class sortGraphDiv{
         var biggestI = this.selectionVars.biggestI;
 
         if(sorted<SIZE){
-            if(i<SIZE-sorted){
+            if(i<SIZE){
                 this.valuesToSort[i].cursor=true;
                 if(this.valuesToSort[i].num>this.valuesToSort[biggestI].num){
                     this.valuesToSort[biggestI].cursor=false;
@@ -166,10 +166,10 @@ class sortGraphDiv{
                 this.valuesToSort[i-1].cursor=false;
                 var biggest = this.valuesToSort.splice(biggestI,1)[0];
                 biggest.sorted=true;
-                this.valuesToSort.push(biggest);
-                i=0;
-                biggestI=0;
+                this.valuesToSort.unshift(biggest);
                 sorted++;
+                i=sorted;
+                biggestI=sorted;
             }
         }else{
            this.sorted = true; 
