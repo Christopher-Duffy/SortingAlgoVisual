@@ -29,6 +29,18 @@ body{
     margin:auto;
     margin-top: 2.5%;
 }
+.counter{
+    border: 3px solid white;
+    border-radius:5px;
+    font-size: 20px;
+    width: 10%;
+    float: right;
+    text-align:center;
+    font-weight: bolder;
+    background-color: lightcoral;
+    color:white;
+    margin:10px;
+}
 /* .arrayElementVisual{
     background-color:steelblue;
     float:right;
