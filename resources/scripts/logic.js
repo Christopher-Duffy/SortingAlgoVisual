@@ -1,6 +1,7 @@
 //these could be a variable
 var SIZE=100;
 var MAX = 100;
+SPEED = 5;
 
 class sortGraphDiv{
     constructor(wrapperDivId){
@@ -10,6 +11,7 @@ class sortGraphDiv{
         this.wrapperHeight = this.wrapperDiv.clientHeight;
         this.bubbleVars={i:0,unsorted:0};
         this.selectionVars={cursor:0,sorted:0,biggestI:0};
+        this.quickVars={i:0,j:0,partitions:[]};
         this.tick=function(){};
         this.sorted=false;
     }
@@ -20,6 +22,7 @@ class sortGraphDiv{
         this.sorted=false;
         this.resetBubbleVars();
         this.resetSelectionVars();
+        this.resetQuickVars();
     }
 
     resetBubbleVars(){
@@ -33,6 +36,13 @@ class sortGraphDiv{
         this.selectionVars.biggestI=0;
     }
 
+    resetQuickVars(){
+        this.quickVars.partitions=[];
+        this.quickVars.partitions.push(new PartitionInstance(0,SIZE-1));
+        this.quickVars.i = 0;
+        this.quickVars.j = -1;
+    }
+
     doSort(sortName){
         switch (sortName){
             case "bubble":
@@ -40,6 +50,9 @@ class sortGraphDiv{
                 break;
             case "selection":
                 this.tick=this.selectionSort;
+                break;
+            case "quick":
+                this.tick=this.quickSort;
                 break;
         }
         this.loop();
@@ -94,9 +107,13 @@ class sortGraphDiv{
     }
 
     swap(i1,i2){
-        var temp = this.valuesToSort[i1];
-        this.valuesToSort[i1]=this.valuesToSort[i2];
-        this.valuesToSort[i2]=temp;
+        if(i1>=0 && i2>=0 && i1<SIZE && i2<SIZE){
+            var temp = this.valuesToSort[i1];
+            this.valuesToSort[i1]=this.valuesToSort[i2];
+            this.valuesToSort[i2]=temp;
+        }else{
+            console.log("Bad swap Value!");
+        }
     }
 
     shuffle(){
@@ -113,7 +130,7 @@ class sortGraphDiv{
         this.tick();
         this.renderValues();
         if(!this.sorted){
-            setTimeout( () =>{this.loop();},5);
+            setTimeout( () =>{this.loop();},SPEED);
         }
     }
 
@@ -179,6 +196,58 @@ class sortGraphDiv{
         this.selectionVars.sorted = sorted;
         this.selectionVars.biggestI=biggestI;
     }
+
+    quickSort(){
+        if(this.quickVars.partitions.length==0){
+            this.sorted = true;
+        }
+        else{
+            var currentPartition = this.quickVars.partitions[0];
+            var i = this.quickVars.i;
+            var j = this.quickVars.j;
+            var low = currentPartition.low;
+            var high = currentPartition.high;
+            var pivot = currentPartition.pivot;
+
+            if(i<=high){
+                if (this.valuesToSort[i].num<this.valuesToSort[pivot].num){
+                    j++;
+                    this.swap(i,j);
+                }
+                if (i>0){
+                    this.valuesToSort[i-1].cursor=false;
+                }
+                this.valuesToSort[i].cursor=true;
+                
+                i++;
+                
+            }else{
+                this.swap(j+1,pivot)
+                this.valuesToSort[j+1].sorted=true;
+                this.quickVars.partitions.shift();
+                if(j+2<high){
+                    this.quickVars.partitions.unshift(new PartitionInstance(j+2,high));
+                }else{
+                    if(j+2<SIZE){
+                        this.valuesToSort[j+2].sorted=true;
+                    }
+                }
+                if (j>low){
+                    this.quickVars.partitions.unshift(new PartitionInstance(low, j));
+                }else{
+                    if (j>-1){
+                        this.valuesToSort[j].sorted=true;
+                    }
+                }
+                if (this.quickVars.partitions.length>0){
+                    i = this.quickVars.partitions[0].low;
+                    j  = this.quickVars.partitions[0].low-1;
+                }
+            }
+            this.quickVars.i=i;
+            this.quickVars.j=j;
+        }
+    }
 }
 
 class arrElement{
@@ -188,6 +257,15 @@ class arrElement{
         this.cursor = false;
     }
 } 
+
+class PartitionInstance{
+    constructor(low,high){
+        this.low = low;
+        this.high = high;
+        this.pivot = high;
+    }
+
+}
 
 var chart = new sortGraphDiv("visualizer");
 chart.init();
