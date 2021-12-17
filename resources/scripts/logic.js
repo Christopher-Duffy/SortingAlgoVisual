@@ -37,8 +37,10 @@ class sortGraphDiv{
         switch (sortName){
             case "bubble":
                 this.tick=this.bubbleSort;
+                break;
             case "selection":
                 this.tick=this.selectionSort;
+                break;
         }
         this.loop();
     }
@@ -113,7 +115,6 @@ class sortGraphDiv{
         if(!this.sorted){
             setTimeout( () =>{this.loop();},5);
         }
-        console.log('looping');
     }
 
     bubbleSort(){
@@ -162,10 +163,10 @@ class sortGraphDiv{
                 }
                 i++;
             }else{
+                this.valuesToSort[i-1].cursor=false;
                 var biggest = this.valuesToSort.splice(biggestI,1)[0];
                 biggest.sorted=true;
                 this.valuesToSort.push(biggest);
-                this.valuesToSort[i-1].cursor=false;
                 i=0;
                 biggestI=0;
                 sorted++;
@@ -192,8 +193,8 @@ var chart = new sortGraphDiv("visualizer");
 chart.init();
 
 function doSort(){
-    var sortName = document.getElementById("algo").value;
-    chart.doSort(sortName);
+    var sortName = document.getElementById("algo").value;                  
+    chart.doSort(sortName); 
 }
 
 function resetSort(){
