@@ -69,7 +69,7 @@ class sortGraphDiv{
             var div = document.createElement("div");
             div.style.width=this.elementWidth+"px";
             div.style.height=this.wrapperHeight*element.num/100+"px";
-            div.style.float="right";
+            div.style.float="left";
             if (element.sorted){
                 div.style.backgroundColor="green";
             }else if(element.cursor){
