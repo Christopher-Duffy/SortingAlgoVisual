@@ -14,15 +14,20 @@ class sortGraphDiv{
         this.quickVars={i:0,j:0,partitions:[]};
         this.tick=function(){};
         this.sorted=false;
+        this.swaps=0;
+        this.comparisons=0;
     }
     
     init(){
         this.resetRandomValues();
+        this.swaps=0;
         this.renderValues();
         this.sorted=false;
         this.resetBubbleVars();
         this.resetSelectionVars();
         this.resetQuickVars();
+        
+        this.comparisons=0;
     }
 
     resetBubbleVars(){
@@ -68,6 +73,11 @@ class sortGraphDiv{
     renderValues(){
         this.deleteElementDivs();
         this.makeDivsFromArray();
+        this.showSwapCounter();
+    }
+
+    showSwapCounter(){
+        document.getElementById("swapCounter").innerText="Swaps : "+this.swaps;
     }
 
     deleteElementDivs(){
@@ -111,6 +121,7 @@ class sortGraphDiv{
             var temp = this.valuesToSort[i1];
             this.valuesToSort[i1]=this.valuesToSort[i2];
             this.valuesToSort[i2]=temp;
+            this.swaps++;
         }else{
             console.log("Bad swap Value!");
         }
@@ -184,6 +195,7 @@ class sortGraphDiv{
                 var biggest = this.valuesToSort.splice(biggestI,1)[0];
                 biggest.sorted=true;
                 this.valuesToSort.unshift(biggest);
+                this.swaps++;
                 sorted++;
                 i=sorted;
                 biggestI=sorted;
