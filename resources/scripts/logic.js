@@ -21,6 +21,7 @@ class sortGraphDiv{
     init(){
         this.resetRandomValues();
         this.swaps=0;
+        this.comparisons=0;
         this.renderValues();
         this.sorted=false;
         this.resetBubbleVars();
@@ -74,10 +75,15 @@ class sortGraphDiv{
         this.deleteElementDivs();
         this.makeDivsFromArray();
         this.showSwapCounter();
+        this.showComparisonCounter();
     }
 
     showSwapCounter(){
         document.getElementById("swapCounter").innerText="Swaps : "+this.swaps;
+    }
+
+    showComparisonCounter(){
+        document.getElementById("comparisonCounter").innerText="Comparisons : "+this.comparisons;
     }
 
     deleteElementDivs(){
@@ -157,6 +163,7 @@ class sortGraphDiv{
                 i = 0;
                 unsorted--;
             }else{
+                this.comparisons++;
                 if (i>0){
                     this.valuesToSort[i-1].cursor=false;
                 }
@@ -181,6 +188,7 @@ class sortGraphDiv{
         if(sorted<SIZE){
             if(i<SIZE){
                 this.valuesToSort[i].cursor=true;
+                this.comparisons++;
                 if(this.valuesToSort[i].num>this.valuesToSort[biggestI].num){
                     this.valuesToSort[biggestI].cursor=false;
                     biggestI = i;
@@ -222,6 +230,7 @@ class sortGraphDiv{
             var pivot = currentPartition.pivot;
 
             if(i<=high){
+                this.comparisons++;
                 if (this.valuesToSort[i].num<this.valuesToSort[pivot].num){
                     j++;
                     this.swap(i,j);
